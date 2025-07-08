@@ -1,0 +1,11 @@
+Desenvolvi este projecto pquandoe stava aprendendo Docker, nele possem 3 databases, algumas comentadas.
+Se for usar pra ver como funiona, saiba que tem um ficheiro wait-fror-db.sh que precisa ser adicionado o,
+
+.dockerignore/
+node_modules
+mysql-data/
+
+e o,
+.env/
+PW_DIALECT="mysql"
+PW_SALT = 10
