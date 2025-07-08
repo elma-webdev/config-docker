@@ -1,0 +1,55 @@
+# cada service no docker eh um cantainer baseado naquela imagem que eu criei
+# o . (ponto) representa a pasta atual onde consta o docker-compose.yml. Efeito: Tudo o que você tem no seu projeto local (por exemplo: index.js, routes/, package.json, etc) vai aparecer dentro do container na pasta /usr/app.
+services:
+  app:
+    build: .
+    container_name: app-express
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql # Depende apenas de iniciar, não de estar pronto
+      # - mongodb
+    restart: always
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    command: ["/bin/sh", "-c", "wait-for-db.sh && npm run dev"]
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: meu_banco
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: senha123
+    ports:
+      - "3307:3306"
+    volumes:
+       - ./mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  # mongodb:
+  #   image: mongo
+  #   container_name: mongo-container
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ./mongo-data:/data/db
+  #   networks:
+  #     - app-network
+
+volumes:
+  mysql_data:
+  # mongo_data:
+
+networks:
+  app-network:
+    driver: bridge
+
+
+
